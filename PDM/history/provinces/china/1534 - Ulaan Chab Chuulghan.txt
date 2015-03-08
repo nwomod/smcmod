@@ -1,0 +1,8 @@
+owner = IMG
+controller = IMG
+add_core = CHI
+add_core = MGL
+add_core = IMG
+trade_goods = horses
+life_rating = 31
+terrain = hilly_grassland
