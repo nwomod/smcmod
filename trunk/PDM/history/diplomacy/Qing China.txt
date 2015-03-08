@@ -1,0 +1,22 @@
+#Qing China substates
+
+
+substate = {
+	first = QNG
+	second = MCK
+	start_date = 1836.1.1
+	end_date = 1937.1.1
+}
+substate = {
+	first = QNG
+	second = XIN
+	start_date = 1836.1.1
+	end_date = 1937.1.1
+}
+substate = {
+	first = QNG
+	second = IMG
+	start_date = 1836.1.1
+	end_date = 1937.1.1
+}
+

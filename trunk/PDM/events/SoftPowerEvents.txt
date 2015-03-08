@@ -1,0 +1,268 @@
+##########################################################################################
+#
+# Soft Power Events
+#
+##########################################################################################
+
+country_event = { # loss of major_creditor status
+	id = 22706
+	title = "$COUNTRY$ has lost status as a major creditor!"
+	desc = "$COUNTRY$ has lsot the position as the worlds leading creditor and banking center."
+	picture = "Merchants"
+	
+	is_triggered_only = yes
+
+	option = {
+		name = "Darn!"
+		remove_country_modifier = major_creditor
+		any_country = {
+			limit = { guarantee = FROM }
+			end_guarantee = FROM
+		}
+	}
+}
+
+country_event = { # guarantee recived 
+	id = 22708
+	title = "Loan guarnatess recived"
+	desc = "We have recived loan guarantess by $FROMCOUNTRY$."
+	picture = "Merchants"
+	
+	is_triggered_only = yes
+
+	option = {
+		name = "Guaranteed"
+        add_country_modifier = {
+            name = debt_guarnatee
+            duration = 1800
+        }
+		remove_country_modifier = debt_paria
+	}
+}
+
+country_event = { # Seek foregin loan guarnatess 
+	id = 22709
+	title = "Seek loan guarantees"
+	desc = "Our financial situation is seek loan guarantess from major creditors. This wll give them infuenc in our country."
+	picture = "Merchants"
+
+	trigger = {
+		civilized = yes
+		is_vassal = no
+		part_of_sphere = no
+		NOT = { money = 15000 }
+		OR = {
+			ruling_party_ideology = socialist
+			ruling_party_ideology = liberal
+		}
+		any_greater_power = {
+			NOT = { guarantee = THIS }
+			has_country_modifier = major_creditor
+			relation = 100
+		}
+	}
+
+	mean_time_to_happen = {
+		months = 12
+	}
+
+	option = {
+		name = "Seek foregin capital for our town"
+		set_country_flag = capital_injection
+        any_greater_power = {
+            limit = {
+                has_country_modifier = major_creditor
+            }
+			country_event = 22710
+        }
+	}
+	option = {
+		name = "No way!"
+	}
+}
+country_event = { # guarantee loans
+	id = 22710
+	title = "Loan Guarantee Request"
+	desc = "$FROMCOUNTRY$ requests loan guarnatess."
+	picture = "Merchants"
+
+	is_triggered_only = yes
+
+	option = {
+		name = "Offer guarantees in exchange for influence"
+		guarantee = FROM
+		diplomatic_influence = { who = FROM value = 20 }
+		FROM = { country_event = 22708 }
+	}
+	option = {
+		name = "No way!"
+		add_country_modifier = { name = debt_paria duration = 60 } 
+	}
+}
+
+country_event = { # Get foregin support for our authoritarian regime hamperd by revolts 
+	id = 22715
+	title = "Ensure our finacnial stability"
+	desc = "Out country is hampered by revolts. Ensure our creditors that this has no effect on our ability to pay our debts"
+	picture = "rebellion"
+
+	trigger = {
+		NOT = { has_country_modifier = capital_flight } 
+        national_provinces_occupied = 0.10
+        any_greater_power = {
+			has_country_modifier = major_creditor
+			guarantee = THIS
+        }
+	}
+
+	mean_time_to_happen = {
+		months = 1
+	}
+
+	option = {
+		name = "Seek foregin support"
+        any_country = {
+            limit = {
+				has_country_modifier = major_creditor
+				guarantee = THIS
+            }
+			country_event = 22716
+        }
+		ai_chance = {
+			factor = 80
+		}
+	}
+	option = {
+		name = "We will ride out this war without foregin involvement"
+		add_country_modifier = {
+			name = capital_flight
+			duration = 360
+		}
+		ai_chance = {
+			factor = 20
+		}
+	}
+}
+
+country_event = { # rebellion in debtor
+	id = 22716
+	title = "Rebellion in $FROMCOUNTRY$"
+	desc = "$FROMCOUNTRY$ is hamperd by revolts. How should we protect our investment"
+	picture = "rebellion"
+
+	is_triggered_only = yes
+
+	option = {
+		name = "Continue our support"
+		FROM = { 
+			add_country_modifier = {
+				name = capital_flight
+				duration = 360
+			}
+		}
+	}
+	option = {
+		name = "End our guarantees and rescue what we can"
+		end_guarantee = FROM
+		FROM = { remove_country_modifier = debt_guarnatee }
+		FROM = { 
+			add_country_modifier = {
+				name = capital_flight
+				duration = 360
+			}
+		}
+	}
+}
+
+country_event = { # every year the same party is in government reduce the tax efficientcy. 
+	id = 22720
+	title = "$COUNTRY$ rule"
+	desc = "$COUNTRY$ rule is increasingly characterized by nepotism and corruption. The same ruling party has been in power too long"
+	picture = "news"
+
+	trigger = {
+		NOT = {
+			has_country_modifier = great_statesman
+			has_country_modifier = successful_industrialist
+			has_country_modifier = administrative_genius
+			has_country_modifier = competent_placeholder
+		}
+		OR = { 
+			AND = { has_country_flag = current_government_tory ruling_party_ideology = conservative }
+			AND = { has_country_flag = current_government_socialist ruling_party_ideology = socialist }
+			AND = { has_country_flag = current_government_liberal ruling_party_ideology = liberal }
+			AND = { has_country_flag = current_government_communist ruling_party_ideology = communist }
+			AND = { has_country_flag = current_government_fascist ruling_party_ideology = fascist }
+			AND = { has_country_flag = current_government_reactionary ruling_party_ideology = reactionary }
+			AND = { has_country_flag = current_government_anarcho_liberal ruling_party_ideology = anarcho_liberal }
+			AND = { has_country_flag = current_government_social_liberal ruling_party_ideology = social_liberal }
+		}
+	}
+
+	mean_time_to_happen = {
+		months = 60
+	}
+	
+	option = {
+		name = "Corruption"
+		add_country_modifier = { name = corruption duration = 360 } 
+	}
+}
+
+country_event = { # if new party is in government comes to power the tax efficientcy improves. 
+	id = 22721
+	title = "New $COUNTRY$ gouvenrnemt campian to rout out corruption"
+	desc = "The new $COUNTRY$ regime has introduced an efficient and diligent administration. An end to corruption"
+	picture = "news"
+
+	trigger = {
+			OR = { 
+				AND = { has_country_flag = current_government_tory NOT = { ruling_party_ideology = conservative } }
+				AND = { has_country_flag = current_government_socialist NOT = { ruling_party_ideology = socialist } }
+				AND = { has_country_flag = current_government_liberal NOT = { ruling_party_ideology = liberal } }
+				AND = { has_country_flag = current_government_communist NOT = { ruling_party_ideology = communist } }
+				AND = { has_country_flag = current_government_fascist NOT = { ruling_party_ideology = fascist } }
+				AND = { has_country_flag = current_government_reactionary NOT = { ruling_party_ideology = reactionary } }
+				AND = { has_country_flag = current_government_anarcho_liberal NOT = { ruling_party_ideology = anarcho_liberal } }
+				AND = { has_country_flag = current_government_social_liberal NOT = { ruling_party_ideology = social_liberal } }
+			}
+	}
+
+	mean_time_to_happen = {
+		months = 12
+	}
+	
+	option = {
+		name = "Campian aganist corruption"
+		remove_country_modifier = corruption
+	}
+}
+
+country_event = { 
+	id = 22722
+	title = "Increase interest due to defcit!"
+	desc = "Increase interest due to defcit"
+	picture = "administration"
+	
+	trigger = {
+		NOT = { money = 15000 }
+		civilized = yes
+		is_vassal = no
+		part_of_sphere = no
+	}
+	
+	mean_time_to_happen = {
+		months = 60
+	}
+	
+	option = {
+		name = "Our creditor increases the interest due to bad finances"
+		add_country_modifier = { name = debt_paria duration = 360 } 
+	}
+	option = {
+		name = "Seek loan guarantees against interest increases"
+		country_event = 22709
+	}
+
+}
+
